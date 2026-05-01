@@ -115,7 +115,7 @@ public class DashboardService {
                 .toList();
 
         // Generate alerts
-        List<Alert> alerts = generateAlerts(intakeLogs, moodLogs);
+        List<DashboardResponse.Alert> alerts = generateAlerts(intakeLogs, moodLogs);
 
         return DashboardResponse.builder()
                 .patientId(patient.getId())
@@ -159,8 +159,8 @@ public class DashboardService {
 
     // ── Alert Generation ───────────────────────────────────────
 
-    private List<Alert> generateAlerts(List<MedicationLog> intakeLogs, List<MoodLog> moodLogs) {
-        List<Alert> alerts = new ArrayList<>();
+    private List<DashboardResponse.Alert> generateAlerts(List<MedicationLog> intakeLogs, List<MoodLog> moodLogs) {
+        List<DashboardResponse.Alert> alerts = new ArrayList<>();
 
         // Check for missed doses (recent)
         long recentMissed = intakeLogs.stream()
@@ -169,7 +169,7 @@ public class DashboardService {
                 .count();
 
         if (recentMissed > 0) {
-            alerts.add(Alert.builder()
+            alerts.add(DashboardResponse.Alert.builder()
                     .type("MISSED_DOSE")
                     .severity(recentMissed >= 3 ? "CRITICAL" : "WARNING")
                     .message(recentMissed + " missed dose(s) in the last 7 days")
@@ -184,7 +184,7 @@ public class DashboardService {
                 .count();
 
         if (delayedDoses > 0) {
-            alerts.add(Alert.builder()
+            alerts.add(DashboardResponse.Alert.builder()
                     .type("DELAYED_DOSE")
                     .severity("INFO")
                     .message(delayedDoses + " dose(s) delayed by more than 30 minutes this week")
@@ -197,7 +197,7 @@ public class DashboardService {
                 .filter(log -> log.getTimestamp().isAfter(LocalDateTime.now().minusDays(3)))
                 .filter(log -> log.getAfterMood() <= 2)
                 .findFirst()
-                .ifPresent(log -> alerts.add(Alert.builder()
+                .ifPresent(log -> alerts.add(DashboardResponse.Alert.builder()
                         .type("LOW_MOOD")
                         .severity("WARNING")
                         .message("Low mood detected (score: " + log.getAfterMood() + "/5) in the last 3 days")
@@ -209,7 +209,7 @@ public class DashboardService {
                 .filter(log -> log.getTimestamp().isAfter(LocalDateTime.now().minusDays(3)))
                 .filter(log -> log.getSymptomScore() >= 8)
                 .findFirst()
-                .ifPresent(log -> alerts.add(Alert.builder()
+                .ifPresent(log -> alerts.add(DashboardResponse.Alert.builder()
                         .type("HIGH_SYMPTOM")
                         .severity("CRITICAL")
                         .message("High symptom score (" + log.getSymptomScore() + "/10) reported in the last 3 days")
