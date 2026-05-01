@@ -3,6 +3,7 @@ package SmartMedSutra.controller;
 import SmartMedSutra.dto.MoodLogRequest;
 import SmartMedSutra.dto.MoodLogResponse;
 import SmartMedSutra.service.MoodLogService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/logs/mood")
 @RequiredArgsConstructor
+@CrossOrigin("*")
+@Tag(name = "Mood Logs", description = "Mood tracking and logging APIs")
 public class MoodLogController {
 
     private final MoodLogService moodLogService;

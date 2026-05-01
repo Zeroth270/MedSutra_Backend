@@ -69,6 +69,15 @@ public class DashboardService {
                 .build();
     }
 
+    // ── All Patients Dashboard ─────────────────────────────────
+
+    public List<DashboardResponse> getAllPatientsDashboard() {
+        List<User> patients = userRepository.findByRole(Role.PATIENT);
+        return patients.stream()
+                .map(this::buildDashboard)
+                .toList();
+    }
+
     // ── Build Dashboard for a Patient ──────────────────────────
 
     private DashboardResponse buildDashboard(User patient) {

@@ -3,6 +3,7 @@ package SmartMedSutra.controller;
 import SmartMedSutra.dto.MedicationRequest;
 import SmartMedSutra.dto.MedicationResponse;
 import SmartMedSutra.service.MedicationService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/medications")
 @RequiredArgsConstructor
+@CrossOrigin("*")
+@Tag(name = "Medications", description = "Medication CRUD management APIs")
 public class MedicationController {
 
     private final MedicationService medicationService;

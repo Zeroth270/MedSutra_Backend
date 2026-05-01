@@ -3,6 +3,7 @@ package SmartMedSutra.controller;
 import SmartMedSutra.dto.CareTeamRequest;
 import SmartMedSutra.dto.CareTeamResponse;
 import SmartMedSutra.service.CareTeamService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/care-team")
 @RequiredArgsConstructor
+@CrossOrigin("*")
+@Tag(name = "Care Team", description = "Care team member management APIs")
 public class CareTeamController {
 
     private final CareTeamService careTeamService;

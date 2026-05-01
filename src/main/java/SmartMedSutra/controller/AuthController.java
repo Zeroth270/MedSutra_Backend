@@ -6,6 +6,7 @@ import SmartMedSutra.dto.RegisterRequest;
 import SmartMedSutra.dto.UserResponse;
 import SmartMedSutra.entity.User;
 import SmartMedSutra.service.AuthService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@CrossOrigin("*")
+@Tag(name = "Authentication", description = "User registration, login, and session APIs")
 public class AuthController {
 
     private final AuthService authService;

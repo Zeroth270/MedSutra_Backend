@@ -3,6 +3,7 @@ package SmartMedSutra.controller;
 import SmartMedSutra.dto.ReminderRequest;
 import SmartMedSutra.dto.ReminderResponse;
 import SmartMedSutra.service.ReminderService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/reminder")
 @RequiredArgsConstructor
+@CrossOrigin("*")
+@Tag(name = "Reminders", description = "Medication reminder management APIs")
 public class ReminderController {
 
     private final ReminderService reminderService;

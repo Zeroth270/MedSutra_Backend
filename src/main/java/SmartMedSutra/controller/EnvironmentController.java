@@ -3,6 +3,7 @@ package SmartMedSutra.controller;
 import SmartMedSutra.dto.EnvironmentRequest;
 import SmartMedSutra.dto.EnvironmentResponse;
 import SmartMedSutra.service.EnvironmentService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/environment")
 @RequiredArgsConstructor
+@CrossOrigin("*")
+@Tag(name = "Environment", description = "Environmental data tracking APIs")
 public class EnvironmentController {
 
     private final EnvironmentService environmentService;

@@ -4,6 +4,7 @@ import SmartMedSutra.dto.UserResponse;
 import SmartMedSutra.dto.UserUpdateRequest;
 import SmartMedSutra.entity.User;
 import SmartMedSutra.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+@CrossOrigin("*")
+@Tag(name = "Users", description = "User profile management APIs")
 public class UserController {
 
     private final UserService userService;

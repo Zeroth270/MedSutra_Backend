@@ -3,6 +3,7 @@ package SmartMedSutra.controller;
 import SmartMedSutra.dto.AlertRequest;
 import SmartMedSutra.dto.AlertResponse;
 import SmartMedSutra.service.AlertService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/alerts")
 @RequiredArgsConstructor
+@Tag(name = "Alerts", description = "Alert notification management APIs")
+@CrossOrigin("*")
 public class AlertController {
 
     private final AlertService alertService;
