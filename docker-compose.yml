@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  app:
+    image: medsutra-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/med_sutra_ai
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Bankai
+
+  db:
+    image: postgres:15
+    container_name: medsutra-db
+    environment:
+      POSTGRES_DB: med_sutra_ai
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Bankai
+    ports:
+      - "5432:5432"
