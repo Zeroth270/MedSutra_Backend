@@ -2,7 +2,8 @@ version: "3.8"
 
 services:
   app:
-    image: medsutra-backend
+    build: .
+    container_name: medsutra-backend
     ports:
       - "8080:8080"
     depends_on:
