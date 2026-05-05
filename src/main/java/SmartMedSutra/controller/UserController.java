@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -40,5 +42,17 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok("User deleted successfully");
+    }
+
+    // POST /users/save-token
+    @PostMapping("/save-token")
+    public ResponseEntity<String> saveToken(@AuthenticationPrincipal User currentUser,
+                                            @RequestBody Map<String, String> body) {
+        String token = body.get("token");
+        if (token != null && !token.isEmpty()) {
+            userService.saveFcmToken(currentUser.getId(), token);
+            return ResponseEntity.ok("Token saved successfully");
+        }
+        return ResponseEntity.badRequest().body("Token is required");
     }
 }

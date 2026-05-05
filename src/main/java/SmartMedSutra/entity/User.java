@@ -41,6 +41,9 @@ public class User {
     @Max(value = 150, message = "Age must be realistic")
     private Integer age;
 
+    @Column(name = "fcm_token")
+    private String fcmToken;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

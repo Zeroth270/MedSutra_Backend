@@ -2,7 +2,9 @@ package SmartMedSutra.controller;
 
 import SmartMedSutra.dto.EnvironmentRequest;
 import SmartMedSutra.dto.EnvironmentResponse;
+import SmartMedSutra.dto.WeatherResponse;
 import SmartMedSutra.service.EnvironmentService;
+import SmartMedSutra.service.WeatherService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,14 @@ import java.util.List;
 public class EnvironmentController {
 
     private final EnvironmentService environmentService;
+    private final WeatherService weatherService;
+
+    // GET /environment/weather
+    @GetMapping("/weather")
+    public ResponseEntity<WeatherResponse> getCurrentWeather(@RequestParam String location) {
+        WeatherResponse response = weatherService.getCurrentWeather(location);
+        return ResponseEntity.ok(response);
+    }
 
     // POST /environment
     @PostMapping

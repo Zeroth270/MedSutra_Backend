@@ -1,5 +1,6 @@
 package SmartMedSutra.service;
 
+import SmartMedSutra.dto.WeatherResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,35 @@ public class WeatherService {
 
     @Value("${weather.api.key}")
     private String apiKey;
+
+    // ── Get Current Weather (Unified) ──────────────────────────
+
+    public WeatherResponse getCurrentWeather(String location) {
+        JsonNode weatherData = getWeatherData(location);
+        if (weatherData == null) return null;
+
+        double lat = extractLat(weatherData);
+        double lon = extractLon(weatherData);
+        JsonNode aqiData = getAqiData(lat, lon);
+
+        return WeatherResponse.builder()
+                .locationName(extractLocationName(weatherData))
+                .temp(extractTemperature(weatherData))
+                .feelsLike(extractFeelsLike(weatherData))
+                .humidity(extractHumidity(weatherData))
+                .pressure(extractPressure(weatherData))
+                .weatherMain(extractWeatherMain(weatherData))
+                .description(extractDescription(weatherData))
+                .icon(extractIcon(weatherData))
+                .windSpeed(extractWindSpeed(weatherData))
+                .windDeg(extractWindDeg(weatherData))
+                .visibility(extractVisibility(weatherData))
+                .clouds(extractClouds(weatherData))
+                .seaLevel(extractSeaLevel(weatherData))
+                .groundLevel(extractGroundLevel(weatherData))
+                .aqi(extractAqi(aqiData))
+                .build();
+    }
 
     // ── Fetch Weather Data (temperature, humidity, lat, lon) ───
 
@@ -77,6 +107,54 @@ public class WeatherService {
 
     public double extractLon(JsonNode weatherData) {
         return weatherData.path("coord").path("lon").asDouble();
+    }
+
+    public String extractLocationName(JsonNode weatherData) {
+        return weatherData.path("name").asText();
+    }
+
+    public Double extractFeelsLike(JsonNode weatherData) {
+        return weatherData.path("main").path("feels_like").asDouble();
+    }
+
+    public Double extractPressure(JsonNode weatherData) {
+        return weatherData.path("main").path("pressure").asDouble();
+    }
+
+    public String extractWeatherMain(JsonNode weatherData) {
+        return weatherData.path("weather").get(0).path("main").asText();
+    }
+
+    public String extractDescription(JsonNode weatherData) {
+        return weatherData.path("weather").get(0).path("description").asText();
+    }
+
+    public String extractIcon(JsonNode weatherData) {
+        return weatherData.path("weather").get(0).path("icon").asText();
+    }
+
+    public Double extractWindSpeed(JsonNode weatherData) {
+        return weatherData.path("wind").path("speed").asDouble();
+    }
+
+    public Integer extractWindDeg(JsonNode weatherData) {
+        return weatherData.path("wind").path("deg").asInt();
+    }
+
+    public Integer extractVisibility(JsonNode weatherData) {
+        return weatherData.path("visibility").asInt();
+    }
+
+    public Integer extractClouds(JsonNode weatherData) {
+        return weatherData.path("clouds").path("all").asInt();
+    }
+
+    public Double extractSeaLevel(JsonNode weatherData) {
+        return weatherData.path("main").path("sea_level").asDouble();
+    }
+
+    public Double extractGroundLevel(JsonNode weatherData) {
+        return weatherData.path("main").path("grnd_level").asDouble();
     }
 
     // ── Extract AQI from air pollution response ────────────────

@@ -45,6 +45,15 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    // ── FCM Token ──────────────────────────────────────────────
+
+    public void saveFcmToken(Long userId, String token) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+        user.setFcmToken(token);
+        userRepository.save(user);
+    }
+
     // ── Helper ─────────────────────────────────────────────────
 
     private UserResponse mapToResponse(User user) {
