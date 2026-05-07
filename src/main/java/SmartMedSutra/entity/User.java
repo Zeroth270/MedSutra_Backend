@@ -44,6 +44,20 @@ public class User {
     @Column(name = "fcm_token")
     private String fcmToken;
 
+    // ── Ayushman Eligibility Fields ────────────────────────────
+    private String state;
+
+    @Column(name = "annual_income")
+    private Long annualIncome;
+
+    @Column(name = "ration_card_type")
+    private String rationCardType;
+
+    @Column(name = "family_size")
+    private Integer familySize;
+
+    private String occupation;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
