@@ -45,6 +45,39 @@ public class ReminderService {
         return mapToResponse(saved);
     }
 
+    // ── Update Reminder ────────────────────────────────────────
+
+    public ReminderResponse updateReminder(Long id, ReminderRequest request) {
+        Reminder existingReminder = reminderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Reminder not found with id: " + id));
+
+        // Note: we generally don't change the patient of an existing reminder.
+        // We verify the patient ID matches, or at least we fetch the proper medication if updated.
+        
+        Medication medication = existingReminder.getMedication();
+        if (request.getMedicationId() != null && 
+            (medication == null || !medication.getMedId().equals(request.getMedicationId()))) {
+            medication = medicationRepository.findById(request.getMedicationId())
+                    .orElseThrow(() -> new RuntimeException("Medication not found with id: " + request.getMedicationId()));
+        } else if (request.getMedicationId() == null) {
+            medication = null;
+        }
+
+        existingReminder.setMedication(medication);
+        existingReminder.setMessage(request.getMessage());
+        existingReminder.setReminderTime(request.getReminderTime());
+        
+        if (request.getFrequency() != null) {
+            existingReminder.setFrequency(request.getFrequency());
+        }
+        if (request.getActive() != null) {
+            existingReminder.setActive(request.getActive());
+        }
+
+        Reminder updated = reminderRepository.save(existingReminder);
+        return mapToResponse(updated);
+    }
+
     // ── Get Reminders by Patient ID ────────────────────────────
 
     public List<ReminderResponse> getRemindersByPatientId(Long patientId) {
@@ -56,6 +89,15 @@ public class ReminderService {
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
+    }
+
+    // ── Delete Reminder ────────────────────────────────────────
+
+    public void deleteReminder(Long id) {
+        if (!reminderRepository.existsById(id)) {
+            throw new RuntimeException("Reminder not found with id: " + id);
+        }
+        reminderRepository.deleteById(id);
     }
 
     // ── Helper ─────────────────────────────────────────────────

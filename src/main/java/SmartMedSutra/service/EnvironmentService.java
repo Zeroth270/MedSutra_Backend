@@ -31,11 +31,19 @@ public class EnvironmentService {
         Double temperature = weatherService.extractTemperature(weatherData);
         Double humidity = weatherService.extractHumidity(weatherData);
 
-        // Fetch AQI using coordinates from weather response
-        double lat = weatherService.extractLat(weatherData);
-        double lon = weatherService.extractLon(weatherData);
-        JsonNode aqiData = weatherService.getAqiData(lat, lon);
-        Double aqi = weatherService.extractAqi(aqiData);
+        // Fetch AQI using coordinates — wrapped in try/catch so a bad AQI response
+        // does not crash the POST request; AQI will be null instead.
+        Double aqi = null;
+        try {
+            double lat = weatherService.extractLat(weatherData);
+            double lon = weatherService.extractLon(weatherData);
+            JsonNode aqiData = weatherService.getAqiData(lat, lon);
+            if (aqiData != null) {
+                aqi = weatherService.extractAqi(aqiData);
+            }
+        } catch (Exception e) {
+            // AQI fetch failed — save record with null AQI rather than failing the request
+        }
 
         // Save to database
         EnvironmentData envData = EnvironmentData.builder()
@@ -57,7 +65,7 @@ public class EnvironmentService {
             throw new RuntimeException("Patient not found with id: " + patientId);
         }
 
-        return environmentDataRepository.findByPatientIdOrderByTimestampDesc(patientId)
+        return environmentDataRepository.findByPatient_IdOrderByTimestampDesc(patientId)
                 .stream()
                 .map(this::mapToResponse)
                 .toList();

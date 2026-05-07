@@ -24,4 +24,6 @@ public class ReminderRequest {
     private LocalTime reminderTime;
 
     private String frequency;          // DAILY, WEEKLY, CUSTOM
+
+    private Boolean active;
 }

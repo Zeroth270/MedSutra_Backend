@@ -25,6 +25,10 @@ public class DashboardResponse {
     private String riskLevel;          // LOW, MODERATE, HIGH, CRITICAL
     private String riskDescription;
 
+    // ── Next Reminder ──────────────────────────────────────────
+    private String nextReminderTime;
+    private String nextReminderMedication;
+
     // ── Recent Logs ────────────────────────────────────────────
     private List<RecentIntakeLog> recentIntakeLogs;
     private List<RecentMoodLog> recentMoodLogs;

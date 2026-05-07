@@ -27,10 +27,24 @@ public class ReminderController {
         return ResponseEntity.ok(response);
     }
 
+    // PUT /reminder/{id}
+    @PutMapping("/{id}")
+    public ResponseEntity<ReminderResponse> updateReminder(@PathVariable Long id, @Valid @RequestBody ReminderRequest request) {
+        ReminderResponse response = reminderService.updateReminder(id, request);
+        return ResponseEntity.ok(response);
+    }
+
     // GET /reminder/{patientId}
     @GetMapping("/{patientId}")
     public ResponseEntity<List<ReminderResponse>> getRemindersByPatientId(@PathVariable Long patientId) {
         List<ReminderResponse> responses = reminderService.getRemindersByPatientId(patientId);
         return ResponseEntity.ok(responses);
+    }
+
+    // DELETE /reminder/{id}
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReminder(@PathVariable Long id) {
+        reminderService.deleteReminder(id);
+        return ResponseEntity.noContent().build();
     }
 }

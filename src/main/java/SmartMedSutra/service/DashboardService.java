@@ -21,6 +21,7 @@ public class DashboardService {
     private final MedicationLogRepository medicationLogRepository;
     private final MoodLogRepository moodLogRepository;
     private final PatientRelationshipRepository relationshipRepository;
+    private final ReminderRepository reminderRepository;
 
     // ── Patient Dashboard ──────────────────────────────────────
 
@@ -126,6 +127,25 @@ public class DashboardService {
         // Generate alerts
         List<DashboardResponse.Alert> alerts = generateAlerts(intakeLogs, moodLogs);
 
+        // Next Reminder
+        List<Reminder> reminders = reminderRepository.findByPatientIdOrderByReminderTimeAsc(patient.getId());
+        Reminder nextReminder = reminders.stream()
+                .filter(Reminder::isActive)
+                .filter(r -> r.getReminderTime() != null && r.getReminderTime().isAfter(java.time.LocalTime.now()))
+                .findFirst()
+                .orElse(null);
+
+        if (nextReminder == null && !reminders.isEmpty()) {
+            nextReminder = reminders.stream()
+                .filter(Reminder::isActive)
+                .filter(r -> r.getReminderTime() != null)
+                .findFirst()
+                .orElse(null);
+        }
+
+        String nextReminderTime = nextReminder != null ? nextReminder.getReminderTime().toString() : null;
+        String nextReminderMedication = nextReminder != null ? (nextReminder.getMedication() != null ? nextReminder.getMedication().getName() : nextReminder.getMessage()) : null;
+
         return DashboardResponse.builder()
                 .patientId(patient.getId())
                 .patientName(patient.getName())
@@ -135,6 +155,8 @@ public class DashboardService {
                 .missedDoses(missedDoses)
                 .riskLevel(riskLevel)
                 .riskDescription(riskDescription)
+                .nextReminderTime(nextReminderTime)
+                .nextReminderMedication(nextReminderMedication)
                 .recentIntakeLogs(recentIntakeLogs)
                 .recentMoodLogs(recentMoodLogs)
                 .alerts(alerts)

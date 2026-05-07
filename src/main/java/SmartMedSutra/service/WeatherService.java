@@ -2,6 +2,7 @@ package SmartMedSutra.service;
 
 import SmartMedSutra.dto.WeatherResponse;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WeatherService {
 
     private final WebClient webClient;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${weather.api.key}")
     private String apiKey;
@@ -51,7 +53,7 @@ public class WeatherService {
 
     public JsonNode getWeatherData(String location) {
         try {
-            return webClient.get()
+            String responseBody = webClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path("/data/2.5/weather")
                             .queryParam("q", location)
@@ -59,11 +61,12 @@ public class WeatherService {
                             .queryParam("units", "metric")
                             .build())
                     .retrieve()
-                    .bodyToMono(JsonNode.class)
+                    .bodyToMono(String.class)
                     .block();
+            return objectMapper.readTree(responseBody);
         } catch (Exception e) {
             log.error("Failed to fetch weather data for location: {}", location, e);
-            throw new RuntimeException("Failed to fetch weather data for: " + location);
+            throw new RuntimeException("Failed to fetch weather data for: " + location + ". Reason: " + e.getMessage());
         }
     }
 
@@ -71,7 +74,7 @@ public class WeatherService {
 
     public JsonNode getAqiData(double lat, double lon) {
         try {
-            return webClient.get()
+            String responseBody = webClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path("/data/2.5/air_pollution")
                             .queryParam("lat", lat)
@@ -79,11 +82,12 @@ public class WeatherService {
                             .queryParam("appid", apiKey)
                             .build())
                     .retrieve()
-                    .bodyToMono(JsonNode.class)
+                    .bodyToMono(String.class)
                     .block();
+            return objectMapper.readTree(responseBody);
         } catch (Exception e) {
             log.error("Failed to fetch AQI data for lat: {}, lon: {}", lat, lon, e);
-            throw new RuntimeException("Failed to fetch AQI data");
+            throw new RuntimeException("Failed to fetch AQI data. Reason: " + e.getMessage());
         }
     }
 
@@ -160,6 +164,9 @@ public class WeatherService {
     // ── Extract AQI from air pollution response ────────────────
 
     public Double extractAqi(JsonNode aqiData) {
-        return aqiData.path("list").get(0).path("main").path("aqi").asDouble();
+        if (aqiData == null) return null;
+        JsonNode list = aqiData.path("list");
+        if (list.isEmpty()) return null;
+        return list.get(0).path("main").path("aqi").asDouble();
     }
 }

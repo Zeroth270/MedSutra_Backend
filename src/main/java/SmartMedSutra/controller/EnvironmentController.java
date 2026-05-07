@@ -17,7 +17,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/environment")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 @Tag(name = "Environment", description = "Environmental data tracking APIs")
 public class EnvironmentController {
 
