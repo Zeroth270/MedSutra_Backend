@@ -16,6 +16,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "Alerts", description = "Alert notification management APIs")
 @CrossOrigin("*")
+
+
 public class AlertController {
 
     private final AlertService alertService;
