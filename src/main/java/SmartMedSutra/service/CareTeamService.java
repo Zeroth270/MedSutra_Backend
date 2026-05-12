@@ -79,8 +79,10 @@ public class CareTeamService {
                 .patientName(rel.getPatient().getName())
                 .caregiverId(rel.getCaregiver() != null ? rel.getCaregiver().getId() : null)
                 .caregiverName(rel.getCaregiver() != null ? rel.getCaregiver().getName() : null)
+                .caregiverEmail(rel.getCaregiver() != null ? rel.getCaregiver().getEmail() : null)
                 .doctorId(rel.getDoctor() != null ? rel.getDoctor().getId() : null)
                 .doctorName(rel.getDoctor() != null ? rel.getDoctor().getName() : null)
+                .doctorEmail(rel.getDoctor() != null ? rel.getDoctor().getEmail() : null)
                 .relationshipType(rel.getRelationshipType())
                 .build();
     }

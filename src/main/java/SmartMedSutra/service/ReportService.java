@@ -42,7 +42,7 @@ public class ReportService {
         int missedDoses = totalDoses - takenDoses;
         double adherence = totalDoses > 0 ? (takenDoses * 100.0) / totalDoses : 0.0;
 
-        // Per-medication breakdown
+        // Per-medication breakdown         
         List<MedicationAdherence> medBreakdown = medications.stream()
                 .map(med -> {
                     List<MedicationLog> medLogs = allLogs.stream()

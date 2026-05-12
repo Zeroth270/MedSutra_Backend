@@ -16,5 +16,7 @@ public class CareTeamResponse {
     private String caregiverName;
     private Long doctorId;
     private String doctorName;
+    private String caregiverEmail;
+    private String doctorEmail;
     private RelationshipType relationshipType;
 }
