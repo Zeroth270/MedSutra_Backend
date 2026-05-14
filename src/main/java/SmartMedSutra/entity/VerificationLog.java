@@ -2,6 +2,7 @@ package SmartMedSutra.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
 
@@ -19,10 +20,12 @@ public class VerificationLog {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", nullable = false)
+    @JsonIgnore
     private User patient;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "medication_id")
+    @JsonIgnore
     private Medication medication;
 
     @Column(name = "detected_name")
